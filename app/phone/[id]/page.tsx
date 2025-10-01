@@ -9,13 +9,12 @@ export function generateStaticParams() {
 }
 
 interface PhonePageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
-export default function PhonePage({ params }: PhonePageProps) {
-  const phone = phones.find(p => p.id === parseInt(params.id));
+export default async function PhonePage({ params }: PhonePageProps) {
+  const { id } = await params;
+  const phone = phones.find(p => p.id === parseInt(id));
 
   if (!phone) {
     notFound();
@@ -23,7 +22,7 @@ export default function PhonePage({ params }: PhonePageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <header className="glass-effect sticky top-0 z-50">
+      <header className="bg-gray-800/80 backdrop-blur-md border-b border-gray-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link 
             href="/" 
@@ -38,7 +37,8 @@ export default function PhonePage({ params }: PhonePageProps) {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-gray-800/50 rounded-2xl shadow-2xl overflow-hidden border border-gray-700/50">
+        <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden border border-gray-700">
+
           <div className="h-80 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center relative">
             <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-transparent"></div>
             <span className="text-gray-300 text-2xl relative z-10">📸 {phone.title}</span>
@@ -74,7 +74,7 @@ export default function PhonePage({ params }: PhonePageProps) {
               </h3>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {phone.specs.map((spec, index) => (
-                  <li key={index} className="flex items-center bg-gray-700/30 rounded-lg p-4 border border-gray-600/30 hover:border-purple-500/30 transition-colors">
+                  <li key={index} className="flex items-center bg-gray-700/30 rounded-lg p-4 border border-gray-600/30">
                     <span className="w-2 h-2 bg-purple-500 rounded-full mr-4 flex-shrink-0"></span>
                     <span className="text-gray-200">{spec}</span>
                   </li>
@@ -87,42 +87,18 @@ export default function PhonePage({ params }: PhonePageProps) {
                 💡 Интересный факт
               </h4>
               <p className="text-gray-300">
-                {phone.brand} продолжает удивлять инновациями в каждом новом поколении смартфонов, 
-                предлагая пользователям передовые технологии и премиальный опыт использования.
+                {phone.brand} продолжает удивлять инновациями в каждом новом поколении смартфонов.
               </p>
             </div>
           </div>
         </div>
-
-        <div className="mt-12">
-          <h3 className="text-2xl font-semibold text-white mb-6 text-center">Другие модели</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {phones
-              .filter(p => p.id !== phone.id)
-              .slice(0, 3)
-              .map((relatedPhone) => (
-                <Link key={relatedPhone.id} href={`/phone/${relatedPhone.id}`}>
-                  <div className="bg-gray-800/30 rounded-xl p-4 border border-gray-700/50 hover:border-purple-500/30 transition-all duration-300 hover:transform hover:-translate-y-1">
-                    <h4 className="text-white font-semibold mb-2">{relatedPhone.title}</h4>
-                    <p className="text-gray-400 text-sm mb-2 line-clamp-2">{relatedPhone.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-400 font-bold">{relatedPhone.price}</span>
-                      <span className="text-gray-500 text-xs bg-gray-700/50 px-2 py-1 rounded">
-                        {relatedPhone.brand}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-          </div>
-        </div>
       </main>
 
-      <footer className="bg-gray-800/50 border-t border-gray-700/50 mt-12">
+      <footer className="bg-gray-800/80 border-t border-gray-700 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <p className="text-gray-500">
-              © 2025 Все права защищены.
+              © 2025. Все права защищены.
             </p>
           </div>
         </div>
